@@ -1,7 +1,6 @@
 import pyupbit
 import numpy as np
-import time
-import pprint
+from prophet import Prophet
 
 
 def get_target_price(market_code: str, k: float) -> float:
@@ -80,3 +79,40 @@ def calculate_all_target_price(x: int) -> list:
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
 
     return target_price_list[:x]
+
+
+def calculate_predict_close_price(market_code: str) -> float:
+    """Prophet모델 기반 종가 예측
+
+    Args:
+        market_code (str): 특정 코인의 마켓코드 (KRW-BTC..)
+
+    Returns:
+        float: 종가
+    """
+    predicted_close_price = 0
+    # 60분 데이터 불러오기
+    df = pyupbit.get_ohlcv(market_code, interval="minute60")
+
+    # 데이터 정리
+    df = df.reset_index()
+    df["ds"] = df["index"]
+    df["y"] = df["close"]
+    data = df[["ds", "y"]]
+
+    # 모델 객체 생성 및 학습
+    prophet_model = Prophet()
+    prophet_model.fit(data)
+
+    # 24시간 이후를 예측
+    future = prophet_model.make_future_dataframe(periods=24, freq="H")
+    forecast = prophet_model.predict(future)
+
+    # 최종 가격 추출
+    closeDf = forecast[forecast["ds"] == forecast.iloc[-1]["ds"].replace(hour=9)]
+    if len(closeDf) == 0:
+        closeDf = forecast[forecast["ds"] == data.iloc[-1]["ds"].replace(hour=9)]
+    closeValue = closeDf["yhat"].values[0]
+    predicted_close_price = closeValue
+
+    return predicted_close_price
