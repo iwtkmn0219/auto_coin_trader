@@ -1,5 +1,7 @@
 import pyupbit
 import numpy as np
+import time
+import pprint
 
 
 def get_target_price(market_code: str, k: float) -> float:
@@ -17,14 +19,14 @@ def get_target_price(market_code: str, k: float) -> float:
     return target_price
 
 
-def get_k_value(market_code: str) -> float:
+def get_k_value(market_code: str) -> tuple:
     """특정 코인의 k값을 찾는 함수
 
     Args:
         market_code (str): 특정 코인의 마켓코드 (KRW-BTC..)
 
     Returns:
-        float: 특정 코인의 k값
+        tuple: 특정 코인의 k값에 관한 정보 [k-value, ROR]
     """
     # 해당 코인의 31일간의 정보를 불러온다.
     df = pyupbit.get_ohlcv(market_code, count=7)
@@ -52,4 +54,26 @@ def get_k_value(market_code: str) -> float:
         if final_ROR > maximum[1]:
             maximum[0] = k
             maximum[1] = final_ROR
-    return maximum[0]
+    return tuple(maximum)
+
+
+def calculate_all_target_price() -> list:
+    """모든 코인에 대한 매수가 계산(소요시간: 약 30초(API GET))
+
+    Returns:
+        list: 과거 7일간의 ROR에 대한 상위 10개의 코인에 대한 k, 매수가, 과거 7일간의 ROR을 리스트 형태로 반환한다.
+    """
+    # KRW 단위 코인만 불러온다.
+    all_tickers = pyupbit.get_tickers(fiat="KRW")
+
+    # list에 k, 매수가, 과거 7일간의 ROR을 불러온다.
+    target_price_list = []
+    for market_code in all_tickers:
+        k, expected_return = get_k_value(market_code)
+        target_price = get_target_price(market_code, k)
+        target_price_list.append([market_code, target_price, expected_return])
+
+    # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
+    target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
+
+    return target_price_list[:10]
