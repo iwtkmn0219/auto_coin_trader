@@ -66,12 +66,12 @@ def calculate_all_target_price() -> list:
     # KRW 단위 코인만 불러온다.
     all_tickers = pyupbit.get_tickers(fiat="KRW")
 
-    # list에 k, 매수가, 과거 7일간의 ROR을 불러온다.
+    # 튜플에 k, 매수가, 과거 7일간의 ROR을 담는다.
     target_price_list = []
     for market_code in all_tickers:
         k, expected_return = get_k_value(market_code)
         target_price = get_target_price(market_code, k)
-        target_price_list.append([market_code, target_price, expected_return])
+        target_price_list.append((market_code, target_price, expected_return))
 
     # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
