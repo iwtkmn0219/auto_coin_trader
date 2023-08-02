@@ -51,8 +51,10 @@ while True:
                 
             pprint.pprint(today_coin_list)
         
-        # 금일 09:10 ~ 명일 08:50 에만 거래 활성화
-        if start_time + datetime.timedelta(seconds=600) < now < end_time - datetime.timedelta(seconds=600):
+        # # 금일 09:10 ~ 명일 08:50 에만 거래 활성화
+        # if start_time + datetime.timedelta(seconds=600) < now < end_time - datetime.timedelta(seconds=600):
+        # 금일 09:10 ~ 금일 24:00 에만 거래 활성화
+        if start_time + datetime.timedelta(seconds=600) < now < start_time + datetime.timedelta(hours=15):
             # 코인별 정보 확인
             for i, e in enumerate(today_coin_list):
                 # 코인별 정보 파싱
@@ -64,13 +66,13 @@ while True:
                 # 현재가 조회
                 current_price = pyupbit.get_orderbook(ticker=market_code)["orderbook_units"][0]["ask_price"]
                 
-                # 조회 정보 확인
-                print("================================")
-                print(f"market_code:\t{market_code}")
-                print(f"target_price:\t{target_price}")
-                print(f"predicted_close_price:\t{predicted_close_price}")
-                print(f"is_trade:\t{is_trade}")
-                print(f"current_price:\t{current_price}\n")
+                # # 조회 정보 확인 코드
+                # print("================================")
+                # print(f"market_code:\t{market_code}")
+                # print(f"target_price:\t{target_price}")
+                # print(f"predicted_close_price:\t{predicted_close_price}")
+                # print(f"is_trade:\t{is_trade}")
+                # print(f"current_price:\t{current_price}\n")
                 
                 # 아직 거래가 이루어지지 않은 경우에 한해서 거래
                 if is_trade == 0:
@@ -78,21 +80,27 @@ while True:
                     if current_price > target_price:
                         my_krw = my_upbit.get_balance("KRW")
                         
-                        print("\033[31m-=-매수가 달성!-=-\033[0m")
+                        print(f"\033[31m매수가 도달\033[0m: \033[35m{market_code}\033[0m")
                         # 업비트 최소 거래 금액
                         if my_krw > MONEY:
                             # 매수 진행
-                            my_upbit.buy_market_order(market_code, MONEY)
+                            # my_upbit.buy_market_order(market_code, MONEY)
                             today_coin_list[i][4] = 1
                             print(f"체결: \033[35m{market_code}\033[0m")
-                else:
-                    print(f"\033[35m{market_code}\033[0m는 이미 체결된 코인입니다.")
-        # 지정 시간 이탈 시 전량 매도
+                        else:
+                            print("\033[41m-=-거래금액 불충족-=-\033[0m")
+                    # else:
+                    #     print(f"\033[34m매수가 미만\033[0m: \033[35m{market_code}\033[0m")
+                # else:
+                #     print(f"\033[35m{market_code}\033[0m는 이미 체결된 코인입니다.")
+                time.sleep(1)
+        # 지정 시간 이탈 시 전량 매도 후 프로그램 종료
         else:
             for i, e in enumerate(today_coin_list):
                 market_code = e[0]
                 balance = my_upbit.get_balance(market_code)
                 my_upbit.sell_market_order(market_code, balance)
+            break
         
         time.sleep(1)
         
