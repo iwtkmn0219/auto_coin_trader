@@ -4,8 +4,8 @@ import datetime
 import functions
 import pprint
 
-MONEY = 5000
-N = 5
+MONEY = int(input("코인 당 가격을 입력하십시오.(원): "))
+N = int(input("선별할 코인의 개수를 입력하십시오.(개): "))
 
 # 계정 정보 불러오기
 f = open("./account_information.txt")
