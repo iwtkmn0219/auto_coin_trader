@@ -7,6 +7,7 @@ import pprint
 MONEY = int(input("코인 당 가격을 입력하십시오.(원): "))
 N = int(input("선별할 코인의 개수를 입력하십시오.(개): "))
 
+print("계정의 정보를 불러오는 중입니다.")
 # 계정 정보 불러오기
 f = open("./account_information.txt")
 lines = f.readlines()
@@ -16,6 +17,7 @@ f.close()
 
 # 로그인
 my_upbit = pyupbit.Upbit(access=access, secret=secret)
+print("로그인 하였습니다.")
 
 today_coin_list = []
 while True:
@@ -32,14 +34,14 @@ while True:
             # 우선 리스트를 비운다.
             today_coin_list.clear()
             
-            print("\033[31mGET: LIST\033[0m\a")
+            print("\033[31m코인의 리스트를 불러옵니다.(약30초 소요)\033[0m\a")
             # 코인 정보 리스트를 불러온다.
             today_coin_list = functions.calculate_all_target_price(N)
-            print("\033[31mDONE\033[0m")
+            print(f"\033[31m{N}개의 코인에 대한 정보를 불러왔습니다. (총 코인의 개수: {len(today_coin_list)})\033[0m")
             
             pprint.pprint(today_coin_list)
             
-            print("\033[31mADD: INFORMATION\033[0m")
+            print("\033[31mADD INFORMATION AND PREDICT CLOSE PRICE\033[0m")
             # 코인별 거래 확인용 체크란 생성
             for i in range(len(today_coin_list)):
                 predicted_close_price = functions.calculate_predict_close_price(today_coin_list[i][0])
