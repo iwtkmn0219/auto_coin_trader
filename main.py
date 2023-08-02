@@ -37,7 +37,7 @@ while True:
             print("\033[31m코인의 리스트를 불러옵니다.(약30초 소요)\033[0m\a")
             # 코인 정보 리스트를 불러온다.
             today_coin_list = functions.calculate_all_target_price(N)
-            print(f"\033[31m{N}개의 코인에 대한 정보를 불러왔습니다. (총 코인의 개수: {len(today_coin_list)})\033[0m")
+            print(f"\033[31m{N}개의 코인에 대한 정보를 불러왔습니다.\033[0m")
             
             pprint.pprint(today_coin_list)
             
