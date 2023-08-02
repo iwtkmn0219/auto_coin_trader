@@ -96,10 +96,12 @@ while True:
                 time.sleep(1)
         # 지정 시간 이탈 시 전량 매도 후 프로그램 종료
         else:
+            print("시장 종료")
             for i, e in enumerate(today_coin_list):
                 market_code = e[0]
                 balance = my_upbit.get_balance(market_code)
                 my_upbit.sell_market_order(market_code, balance)
+            print("프로그램을 종료합니다")
             break
         
         time.sleep(1)
