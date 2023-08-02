@@ -57,23 +57,26 @@ def get_k_value(market_code: str) -> tuple:
     return tuple(maximum)
 
 
-def calculate_all_target_price() -> list:
+def calculate_all_target_price(x: int) -> list:
     """모든 코인에 대한 매수가 계산(소요시간: 약 30초(API GET))
 
+    Args:
+        x (int): 선택할 코인의 개수
+
     Returns:
-        list: 과거 7일간의 ROR에 대한 상위 10개의 코인에 대한 k, 매수가, 과거 7일간의 ROR을 리스트 형태로 반환한다.
+        list: 과거 7일간의 ROR에 대한 상위 x개의 코인에 대한 k, 매수가, 과거 7일간의 ROR을 리스트 형태로 반환한다.
     """
     # KRW 단위 코인만 불러온다.
     all_tickers = pyupbit.get_tickers(fiat="KRW")
 
-    # 튜플에 k, 매수가, 과거 7일간의 ROR을 담는다.
+    # 리스트에 k, 매수가, 과거 7일간의 ROR을 담는다.
     target_price_list = []
     for market_code in all_tickers:
         k, expected_return = get_k_value(market_code)
         target_price = get_target_price(market_code, k)
-        target_price_list.append((market_code, target_price, expected_return))
+        target_price_list.append([market_code, target_price, expected_return])
 
     # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
 
-    return target_price_list[:10]
+    return target_price_list[:x]
