@@ -5,7 +5,7 @@ import functions
 import pprint
 
 MONEY = 5000
-N = 3
+N = 5
 
 # 계정 정보 불러오기
 f = open("./account_information.txt")
@@ -84,7 +84,7 @@ while True:
                         # 업비트 최소 거래 금액
                         if my_krw > MONEY:
                             # 매수 진행
-                            # my_upbit.buy_market_order(market_code, MONEY)
+                            my_upbit.buy_market_order(market_code, MONEY)
                             today_coin_list[i][4] = 1
                             print(f"체결: \033[35m{market_code}\033[0m")
                         else:
