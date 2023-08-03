@@ -78,8 +78,8 @@ while True:
                 
                 # 아직 거래가 이루어지지 않은 경우에 한해서 거래
                 if is_trade == 0:
-                    # 매수가 달성 시 (현재가 > 매수가)
-                    if current_price > target_price:
+                    # 매수가 달성 시 (현재가 > 매수가), 예측 종가보다 낮은 경우 (현재가 < 예측 종가)
+                    if current_price > target_price and current_price < predicted_close_price:
                         my_krw = my_upbit.get_balance("KRW")
                         
                         print(f"\033[31m매수가 도달\033[0m: \033[35m{market_code}\033[0m")
