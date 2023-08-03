@@ -75,6 +75,7 @@ def calculate_all_target_price(x: int) -> list:
         k, expected_return = get_k_value(market_code)
         target_price = get_target_price(market_code, k)
         target_price_list.append([market_code, target_price, expected_return])
+        print(f"Get coin({market_code}) information")
         time.sleep(0.125)
 
     # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
