@@ -20,7 +20,7 @@ print("==========================")
 my_upbit = login_upbit()
 print("\033[32m===== Login  Success =====\033[0m")
 
-MONEY = 50000
+MONEY = 40000
 N = 15
 
 today_coin_list = []
@@ -99,7 +99,7 @@ while True:
                         # 업비트 최소 거래 금액
                         if my_krw > MONEY and my_krw > 7000:
                             # 매수 진행
-                            # my_upbit.buy_market_order(market_code, MONEY)
+                            my_upbit.buy_market_order(market_code, MONEY)
                             today_coin_list[i][4] = 1
                             print(f"Sign: \033[35m{market_code}\033[0m")
                         else:
