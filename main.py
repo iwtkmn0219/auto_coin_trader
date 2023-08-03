@@ -6,9 +6,11 @@ import pprint
 
 
 def login_upbit() -> pyupbit.Upbit:
-    # 로그인 정보 입력
-    access = input("Access key: ")
-    secret = input("Secret key: ")
+    f = open("./tmp.txt")
+    lines = f.readlines()
+    access = lines[0].strip()
+    secret = lines[1].strip()
+    f.close()
     return pyupbit.Upbit(access, secret)
 
 
