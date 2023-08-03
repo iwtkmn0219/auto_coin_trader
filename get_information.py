@@ -35,7 +35,7 @@ print("\033[31mDONE\033[0m")
 
 possible = []
 print("|마켓코드\t|현재가\t\t|매수가\t\t|예측종가\t|가능성\t|")
-print("|---------------|---------------|---------------|---------------|---|")
+print("|---------------|---------------|---------------|---------------|-------|")
 for i, e in enumerate(today_coin_list):
     # 현재가 조회
     current_price = pyupbit.get_orderbook(ticker=e[0])["orderbook_units"][0][
@@ -49,6 +49,6 @@ for i, e in enumerate(today_coin_list):
     print(f"|{e[0]:<10}\t|{current_price:<10}\t|{e[1]:<10.3f}\t|{e[3]:<10.3f}\t|  {check}  |")
     time.sleep(0.125)
 
-print("|===============|===============|===============|===============|===|")
+print("|===============|===============|===============|===============|=======|")
 for e in possible:
     print(e)
