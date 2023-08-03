@@ -55,8 +55,8 @@ while True:
         
         # # 금일 09:10 ~ 명일 08:50 에만 거래 활성화
         # if start_time + datetime.timedelta(seconds=600) < now < end_time - datetime.timedelta(seconds=600):
-        # 금일 09:10 ~ 금일 24:00 에만 거래 활성화
-        if start_time + datetime.timedelta(seconds=600) < now < start_time + datetime.timedelta(hours=15):
+        # 금일 09:00 ~ 금일 24:00 에만 거래 활성화
+        if start_time < now < start_time + datetime.timedelta(hours=15):
             # 코인별 정보 확인
             for i, e in enumerate(today_coin_list):
                 # 코인별 정보 파싱
