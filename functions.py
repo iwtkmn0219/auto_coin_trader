@@ -1,6 +1,7 @@
 import pyupbit
 import numpy as np
 from prophet import Prophet
+import time
 
 
 def get_target_price(market_code: str, k: float) -> float:
@@ -74,6 +75,7 @@ def calculate_all_target_price(x: int) -> list:
         k, expected_return = get_k_value(market_code)
         target_price = get_target_price(market_code, k)
         target_price_list.append([market_code, target_price, expected_return])
+        time.sleep(0.125)
 
     # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
