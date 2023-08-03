@@ -56,6 +56,7 @@ while True:
                 today_coin_list[i].append(0)
             print("\033[31mDONE\033[0m")
             pprint.pprint(today_coin_list)
+            time.sleep(20)
 
         # 금일 09:02 ~ 명일 08:55 에만 거래 활성화
         if (
