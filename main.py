@@ -7,18 +7,20 @@ import pprint
 MONEY = int(input("코인 당 가격을 입력하십시오.(원): "))
 N = int(input("선별할 코인의 개수를 입력하십시오.(개): "))
 
-print("계정의 정보를 불러오는 중입니다.")
-# 계정 정보 불러오기
-f = open("./account_information.txt")
-lines = f.readlines()
-access = lines[0].strip()
-secret = lines[1].strip()
-f.close()
-
-# 로그인
-my_upbit = pyupbit.Upbit(access=access, secret=secret)
 print("로그인 하였습니다.")
 
+def login_upbit() -> pyupbit.Upbit:
+    # 로그인 정보 입력
+    access = input()
+    secret = input()
+    return pyupbit.Upbit(access, secret)
+
+# 프로그램 시작
+print("==========================")
+print("Welcome! Auto Coin Trader!")
+print("==========================")
+login_upbit()
+print("\033[32m===== Login  Success =====\033[0m")
 today_coin_list = []
 while True:
     try:
@@ -34,7 +36,7 @@ while True:
             # 우선 리스트를 비운다.
             today_coin_list.clear()
             
-            print("\033[31m코인의 리스트를 불러옵니다.(약30초 소요)\033[0m\a")
+            print("\033[31m코인의 리스트를 불러옵니다.(약30초 소요)\033[0m")
             # 코인 정보 리스트를 불러온다.
             today_coin_list = functions.calculate_all_target_price(N)
             print(f"\033[31m{N}개의 코인에 대한 정보를 불러왔습니다.\033[0m")
