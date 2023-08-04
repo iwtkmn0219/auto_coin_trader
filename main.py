@@ -74,6 +74,8 @@ while True:
                 predicted_close_price = e[3]
                 is_trade = e[4]
 
+                ROR = ((predicted_close_price / target_price) - 1) * 100
+
                 # 현재가 조회
                 current_price = pyupbit.get_orderbook(ticker=market_code)[
                     "orderbook_units"
@@ -89,10 +91,11 @@ while True:
 
                 # 아직 거래가 이루어지지 않은 경우에 한해서 거래
                 if is_trade == 0:
-                    # 매수가 달성 시 (현재가 > 매수가), 예측 종가보다 낮은 경우 (현재가 < 예측 종가)
+                    # 매수가 달성 시 (현재가 > 매수가), 예측 종가보다 낮은 경우 (현재가 < 예측 종가), ROR이 0.25% 이상인 경우 (업비트 수수료 0.05%)
                     if (
                         current_price > target_price
                         and current_price < predicted_close_price
+                        and ROR > 0.25
                     ):
                         my_krw = my_upbit.get_balance("KRW")
 
