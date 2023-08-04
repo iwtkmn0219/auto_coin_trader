@@ -35,7 +35,9 @@ print("\033[31mDONE\033[0m")
 
 possible = []
 print("|마켓코드\t|k-value\t|기대수익률(%)\t|매수가(원)\t|현재가(원)\t|예측종가(원)\t|가능성\t|")
-print("|---------------|---------------|---------------|---------------|---------------|---------------|-------|")
+print(
+    "|---------------|---------------|---------------|---------------|---------------|---------------|-------|"
+)
 for i, e in enumerate(today_coin_list):
     # 현재가 조회
     current_price = pyupbit.get_orderbook(ticker=e[0])["orderbook_units"][0][
@@ -44,14 +46,20 @@ for i, e in enumerate(today_coin_list):
     k_value = functions.get_k_value(e[0])[0]
     # 예측 데이터 기반 기대수익률
     ROR = (e[3] / e[1] - 1) * 100
-    if e[3] <= e[1]:
+    if e[3] <= e[1] and ROR <= 0.25:
         check = "░░░"
     else:
         check = "▓▓▓"
-        possible.append(f"|{e[0]:<10}\t|{k_value:<10.5f}\t|{ROR:<10.3f}\t|{e[1]:<10.3f}\t|{current_price:<10}\t|{e[3]:<10.3f}\t|  {check}  |")
-    print(f"|{e[0]:<10}\t|{k_value:<10.5f}\t|{ROR:<10.3f}\t|{e[1]:<10.3f}\t|{current_price:<10}\t|{e[3]:<10.3f}\t|  {check}  |")
+        possible.append(
+            f"|{e[0]:<10}\t|{k_value:<10.5f}\t|{ROR:<10.3f}\t|{e[1]:<10.3f}\t|{current_price:<10}\t|{e[3]:<10.3f}\t|  {check}  |"
+        )
+    print(
+        f"|{e[0]:<10}\t|{k_value:<10.5f}\t|{ROR:<10.3f}\t|{e[1]:<10.3f}\t|{current_price:<10}\t|{e[3]:<10.3f}\t|  {check}  |"
+    )
     time.sleep(0.125)
 
-print("|===============|===============|===============|===============|===============|===============|=======|")
+print(
+    "|===============|===============|===============|===============|===============|===============|=======|"
+)
 for e in possible:
     print(e)
