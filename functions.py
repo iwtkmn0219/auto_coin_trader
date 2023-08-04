@@ -68,7 +68,7 @@ def get_k_value(market_code: str) -> tuple:
         sharpe_ratio = std_exp / std_sp
 
         # 선정 기준 설정
-        value = sharpe_ratio + MDD * 2
+        value = sharpe_ratio + MDD * 25
         # print(f"k = {k},\tfinal_ROR = {final_ROR:.3f},\tMDD = {MDD:.3f},\t수치 = {value:.3f}")
 
         # k값 갱신
