@@ -46,7 +46,7 @@ for i, e in enumerate(today_coin_list):
     k_value = functions.get_k_value(e[0])[0]
     # 예측 데이터 기반 기대수익률
     ROR = (e[3] / e[1] - 1) * 100
-    if e[3] <= e[1] and ROR <= 0.25:
+    if e[3] <= e[1] and ROR <= 0.125:
         check = "░░░"
     else:
         check = "▓▓▓"
