@@ -28,12 +28,15 @@ def get_k_value(market_code: str) -> tuple:
     Returns:
         tuple: 특정 코인의 k값에 관한 정보 [k-value, ROR]
     """
-    # 해당 코인의 31일간의 정보를 불러온다.
-    df = pyupbit.get_ohlcv(market_code, count=7)
+    # 해당 코인의 200일간의 정보를 불러온다.
+    df = pyupbit.get_ohlcv(market_code)
     df = df.drop("value", axis=1)
 
+    # 보유시 수익률
+    holding_return = df.iloc[-1, 3] / df.iloc[0, 0]
+
     # 0.01단위로 k값을 대입해보아 최적의 k값을 찾는다.
-    maximum = [0, 0]
+    maximum = [0, 0, 0]
     for k in np.arange(0.1, 1.0, 0.01):
         # 부동 소수점 오차 제거
         k = round(k, 3)
@@ -43,18 +46,40 @@ def get_k_value(market_code: str) -> tuple:
         df["target"] = df["open"] + df["range"].shift(1)
 
         # 수익률
-        df["ROR"] = np.where(
-            (df["high"] + df["close"]) / 2 > df["target"], df["close"] / df["target"], 1
-        )
+        df["ROR"] = np.where(df["high"] > df["target"], df["close"] / df["target"], 1)
+
+        # 누적 수익률
+        df["hpr"] = df["ROR"].cumprod()
+
+        # 낙폭
+        df["draw down"] = (df["hpr"] - df["hpr"].cummax()) / df["hpr"].cummax()
+        # 최대 낙폭
+        MDD = df["draw down"].min()
 
         # 최종 수익률
         final_ROR = df["ROR"].cumprod()[-1]
 
+        # sharpe param
+        df["sp"] = df["ROR"] - holding_return
+        std_exp = df["sp"].mean()
+        std_sp = df["sp"].std()
+
+        # 샤프 지수
+        sharpe_ratio = std_exp / std_sp
+
+        # 선정 기준 설정
+        value = sharpe_ratio + MDD * 2
+        # print(f"k = {k},\tfinal_ROR = {final_ROR:.3f},\tMDD = {MDD:.3f},\t수치 = {value:.3f}")
+
         # k값 갱신
-        if final_ROR > maximum[1]:
+        if value > maximum[2] or maximum[2] == 0:
             maximum[0] = k
             maximum[1] = final_ROR
-    return tuple(maximum)
+            maximum[2] = value
+    # print(maximum)
+
+    result: tuple = (maximum[0], maximum[1])
+    return result
 
 
 def calculate_all_target_price(x: int) -> list:
@@ -69,7 +94,7 @@ def calculate_all_target_price(x: int) -> list:
     # KRW 단위 코인만 불러온다.
     all_tickers = pyupbit.get_tickers(fiat="KRW")
 
-    # 리스트에 k, 매수가, 과거 7일간의 ROR을 담는다.
+    # 리스트에 k, 매수가, 과거 200일간의 ROR을 담는다.
     target_price_list = []
     for i, market_code in enumerate(all_tickers):
         k, expected_return = get_k_value(market_code)
@@ -78,7 +103,7 @@ def calculate_all_target_price(x: int) -> list:
         if i % 10 == 0:
             print(f"{i}: Get coin({market_code}) information")
 
-    # 과거 7일간의 ROR을 바탕으로 내림차순 정렬한다.
+    # 과거 200일간의 ROR을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
 
     return target_price_list[:x]
