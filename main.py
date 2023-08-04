@@ -91,11 +91,12 @@ while True:
 
                 # 아직 거래가 이루어지지 않은 경우에 한해서 거래
                 if is_trade == 0:
-                    # 매수가 달성 시 (현재가 > 매수가), 예측 종가보다 낮은 경우 (현재가 < 예측 종가), ROR이 0.25% 이상인 경우 (업비트 수수료 0.05%)
+                    # 매수가 달성 시 (현재가 > 매수가), 예측 종가보다 낮은 경우 (현재가 < 예측 종가), ROR이 0.125% 이상인 경우 (업비트 수수료 0.05%), 현재가가 매수가의 +0.5% 미만인 경우
                     if (
                         current_price > target_price
                         and current_price < predicted_close_price
-                        and ROR > 0.25
+                        and ROR > 0.125
+                        and current_price < target_price * 1.005
                     ):
                         my_krw = my_upbit.get_balance("KRW")
 
