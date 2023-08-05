@@ -22,8 +22,8 @@ print("==========================")
 my_upbit = login_upbit()
 print("\033[32m===== Login  Success =====\033[0m")
 
-MONEY = 150000
-N = 30
+MONEY = 200000
+N = 50
 
 today_coin_list = []
 while True:

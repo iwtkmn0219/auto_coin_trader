@@ -2,8 +2,8 @@ import pyupbit
 import functions
 import time
 
-MONEY = 60000
-N = 30
+MONEY = 200000
+N = 50
 
 
 def login_upbit() -> pyupbit.Upbit:
