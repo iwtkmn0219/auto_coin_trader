@@ -37,7 +37,7 @@ def get_k_value(market_code: str) -> tuple:
 
     # 0.01단위로 k값을 대입해보아 최적의 k값을 찾는다.
     maximum = [0, 0, 0]
-    for k in np.arange(0.1, 1.0, 0.01):
+    for k in np.arange(0.1, 1.0, 0.1):
         # 부동 소수점 오차 제거
         k = round(k, 3)
 
@@ -68,7 +68,7 @@ def get_k_value(market_code: str) -> tuple:
         sharpe_ratio = std_exp / std_sp
 
         # 선정 기준 설정
-        value = sharpe_ratio + MDD * 25
+        value = sharpe_ratio + MDD * 100
         # print(f"k = {k},\tfinal_ROR = {final_ROR:.3f},\tMDD = {MDD:.3f},\t수치 = {value:.3f}")
 
         # k값 갱신
@@ -102,6 +102,7 @@ def calculate_all_target_price(x: int) -> list:
         target_price_list.append([market_code, target_price, expected_return])
         if i % 10 == 0:
             print(f"{i}: Get coin({market_code}) information")
+        time.sleep(0.125)
 
     # 과거 200일간의 ROR을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
