@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 # discord bot token
 DISCORD_TOKEN = (
-    "MTEzNzU0MDI4OTg5NzE3NzEzOA.GffzZO.VTtO95OlDvAKLHlMedCXKvhsh9GNMGJMZ2Ju0g"
+    "PLEASE INPUT YOUR DISCORD BOT TOKEN"
 )
 # discord channel id (일반)
 CHANNEL_ID = 1137546202708185182
