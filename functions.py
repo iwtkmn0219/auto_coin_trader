@@ -37,7 +37,7 @@ def get_k_value(market_code: str) -> tuple:
 
     # 0.01단위로 k값을 대입해보아 최적의 k값을 찾는다.
     maximum = [0, 0, 0]
-    for k in np.arange(0.3, 1.0, 0.1):
+    for k in np.arange(0.3, 0.7, 0.1):
         # 부동 소수점 오차 제거
         k = round(k, 3)
 
