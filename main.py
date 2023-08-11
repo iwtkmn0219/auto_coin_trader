@@ -70,7 +70,7 @@ while True:
                 buying_price = today_coin_list[i][1]
                 if (
                     predicted_close_price <= buying_price
-                    and (predicted_close_price / buying_price - 1) * 100 < 0.5
+                    or (predicted_close_price / buying_price - 1) * 100 < 0.5
                 ):
                     today_coin_list[i].append(0)
                 # 아닌 경우 1을 기록
