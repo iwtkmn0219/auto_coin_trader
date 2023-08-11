@@ -50,6 +50,12 @@ while True:
             today_coin_list = functions.calculate_all_target_price(N)
             print(f"mGet \033[31{N}\033[0m coins information")
 
+            # 파일 경로
+            file_path = './information.txt'
+            # 파일 내용 비우기
+            with open(file_path, 'w'):
+                pass
+
             # 코인별 예측값 생성
             print("\033[31mAdd additional information(predicted close price..)\033[0m")
             for i in range(len(today_coin_list)):
@@ -60,20 +66,20 @@ while True:
                 today_coin_list[i].append(0)
 
                 # 매수 체결 가능성
-                # 예측값이 매수가보다 낮은 경우 and 기대수익률이 0.125% 미만인 경우 0을 기록
+                # 예측값이 매수가보다 낮은 경우 and 기대수익률이 0.5% 미만인 경우 0을 기록, txt파일에 저장
                 buying_price = today_coin_list[i][1]
                 if (
                     predicted_close_price <= buying_price
-                    and (predicted_close_price / buying_price - 1) * 100 < 0.125
+                    and (predicted_close_price / buying_price - 1) * 100 < 0.5
                 ):
                     today_coin_list[i].append(0)
                 # 아닌 경우 1을 기록
                 else:
                     today_coin_list[i].append(1)
+                    with open(file_path, 'a') as f:
+                        f.write(str(today_coin_list[i]))
 
-            print(today_coin_list)
             print("\033[31mDONE\033[0m")
-            pprint.pprint(today_coin_list)
             time.sleep(20)
 
         # 금일 08:02 ~ 명일 07:55 에만 거래 활성화
