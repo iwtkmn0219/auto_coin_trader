@@ -116,7 +116,7 @@ while True:
                     if (
                         target_price < current_price < target_price * 1.005
                         and current_price < predicted_close_price
-                        and ROR >= 1
+                        and ROR >= 0.5
                     ):
                         my_krw = my_upbit.get_balance("KRW")
 

@@ -47,7 +47,7 @@ for i, e in enumerate(today_coin_list):
     past_ROR = (past_ROR - 1) * 100
     # 예측 데이터 기반 기대수익률
     ROR = (e[3] / e[1] - 1) * 100
-    if e[3] <= e[1] or ROR <= 1:
+    if e[3] <= e[1] or ROR <= 0.5:
         check = "░░░"
     else:
         check = "▓▓▓"
