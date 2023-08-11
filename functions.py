@@ -2,6 +2,7 @@ import pyupbit
 import numpy as np
 from prophet import Prophet
 import time
+import requests
 
 
 def get_target_price(market_code: str, k: float) -> float:
@@ -89,7 +90,7 @@ def calculate_all_target_price(x: int) -> list:
         x (int): 선택할 코인의 개수
 
     Returns:
-        list: 과거 7일간의 ROR에 대한 상위 x개의 코인에 대한 k, 매수가, 과거 7일간의 ROR을 리스트 형태로 반환한다.
+        list: 거래대금에 대한 상위 x개의 코인에 대한 k, 매수가, 과거 7일간의 ROR을 리스트 형태로 반환한다.
     """
     # KRW 단위 코인만 불러온다.
     all_tickers = pyupbit.get_tickers(fiat="KRW")
@@ -99,12 +100,15 @@ def calculate_all_target_price(x: int) -> list:
     for i, market_code in enumerate(all_tickers):
         k, expected_return = get_k_value(market_code)
         target_price = get_target_price(market_code, k)
-        target_price_list.append([market_code, target_price, expected_return])
-        if i % 10 == 0:
-            print(f"{i}: Get coin({market_code}) information")
+        url = "https://api.upbit.com/v1/ticker?markets=" + market_code
+        headers = {"accept": "application/json"}
+        response = requests.get(url, headers=headers)
+        data = response.json()[0]
+        trade_price = data['acc_trade_price_24h']
+        target_price_list.append([market_code, target_price, trade_price])
         time.sleep(0.125)
 
-    # 과거 200일간의 ROR을 바탕으로 내림차순 정렬한다.
+    # 거래대금을 바탕으로 내림차순 정렬한다.
     target_price_list = sorted(target_price_list, key=lambda x: x[2], reverse=True)
 
     return target_price_list[:x]
@@ -145,3 +149,4 @@ def calculate_predict_close_price(market_code: str) -> float:
     predicted_close_price = closeValue
 
     return predicted_close_price
+
